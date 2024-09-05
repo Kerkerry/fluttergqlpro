@@ -44,6 +44,16 @@ const String deleteStudent = """
   }
 """;
 
+const String updateStudent = """
+mutation updateStudent(\$ID:String!,\$name:String!,\$age:Int!){
+  updateStudent(ID:\$ID,name:\$name,age:\$age){
+    name
+    age
+  }
+}
+
+""";
+
 class Student {
   final String id;
   final String name;
@@ -122,6 +132,28 @@ class MyHomePage extends StatelessWidget {
                           const SizedBox(width: 15),
                           Mutation(
                             options: MutationOptions(
+                              document: gql(updateStudent),
+                              update: (cache, result) => cache,
+                              onCompleted: (data) => print(data),
+                            ),
+                            builder: (runMutation, result) {
+                              return IconButton(
+                                  onPressed: () {
+                                    runMutation({
+                                      "ID": "66cf91070a5563121023e49e",
+                                      "name": "Macovick Larry Rick",
+                                      "age": 25
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.green,
+                                  ));
+                            },
+                          ),
+                          const SizedBox(width: 15),
+                          Mutation(
+                            options: MutationOptions(
                               document: gql(deleteStudent),
                               update: (cache, result) => cache,
                               onCompleted: (data) => print(data),
@@ -136,7 +168,7 @@ class MyHomePage extends StatelessWidget {
                                     color: Colors.red,
                                   ));
                             },
-                          )
+                          ),
                         ],
                       );
                     }),
